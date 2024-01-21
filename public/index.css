@@ -1,0 +1,22 @@
+#wrapper {
+  background-color: #f0f0f0;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: 2px solid #333;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#hashValue {
+  margin-top: 20px;
+  font-size: 24px;
+}
