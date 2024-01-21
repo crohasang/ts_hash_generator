@@ -1,5 +1,3 @@
-"use strict";
-// src/index.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -58,7 +56,7 @@ class BlockChain {
     }
 }
 const blockchain = new BlockChain();
-function addBlockAndDisplay(data) {
+export function addBlockAndDisplay(data) {
     return __awaiter(this, void 0, void 0, function* () {
         yield blockchain.addBlock(data);
         const blocks = blockchain.getBlocks();

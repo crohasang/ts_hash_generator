@@ -3,6 +3,11 @@
   <head>
     <title>Hash Generator</title>
     <script src="/build/index.js"></script>
+    <script type="module">
+      import { addBlockAndDisplay } from './build/index.js';
+
+      window.addBlockAndDisplay = addBlockAndDisplay;
+    </script>
   </head>
   <body>
     <button onclick="addBlockAndDisplay('New block')">Generate Hash</button>

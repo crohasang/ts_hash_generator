@@ -1,4 +1,9 @@
 // src/index.ts
+declare global {
+  interface Window {
+    addBlockAndDisplay: typeof addBlockAndDisplay;
+  }
+}
 
 interface BlockShape {
   hash: string;
@@ -66,7 +71,7 @@ class BlockChain {
 
 const blockchain = new BlockChain();
 
-async function addBlockAndDisplay(data: string) {
+export async function addBlockAndDisplay(data: string) {
   await blockchain.addBlock(data);
   const blocks = blockchain.getBlocks();
   const lastBlock = blocks[blocks.length - 1];
