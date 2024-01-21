@@ -51,12 +51,13 @@ class BlockChain {
       this.blocks.length + 1,
       data
     );
-    newBlock.hash = await Block.calculateHash(
-      newBlock.prevHash,
-      newBlock.height,
-      newBlock.data
-    );
+    await newBlock.initialize();
     this.blocks.push(newBlock);
+    // newBlock.hash = await Block.calculateHash(
+    //   newBlock.prevHash,
+    //   newBlock.height,
+    //   newBlock.data
+    // );
   }
   public getBlocks() {
     return [...this.blocks];

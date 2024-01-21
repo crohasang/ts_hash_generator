@@ -44,8 +44,13 @@ class BlockChain {
     addBlock(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const newBlock = new Block(this.getPrevHash(), this.blocks.length + 1, data);
-            newBlock.hash = yield Block.calculateHash(newBlock.prevHash, newBlock.height, newBlock.data);
+            yield newBlock.initialize();
             this.blocks.push(newBlock);
+            // newBlock.hash = await Block.calculateHash(
+            //   newBlock.prevHash,
+            //   newBlock.height,
+            //   newBlock.data
+            // );
         });
     }
     getBlocks() {
