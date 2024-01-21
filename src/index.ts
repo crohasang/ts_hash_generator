@@ -1,52 +1,80 @@
-import crypto from "crypto";
+// src/index.ts
 
 interface BlockShape {
-    hash: string; // 해쉬 값
-    prevHash: string; // 이전 해쉬 값
-    height: number; // 블록의 위치를 표시해주는 숫자
-    data: string;
+  hash: string;
+  prevHash: string;
+  height: number;
+  data: string;
 }
 
 class Block implements BlockShape {
-    public hash: string;
-    constructor (
-        public prevHash: string,
-        public height: number,
-        public data: string,
-        // hash 값은 prevHash, height, data 값을 이용해서 계산됨
-        // 어떤 입력값의 해쉬는 항상 같은 값이 나옴
-        ) {
-            this.hash = Block.calculateHash(prevHash, height, data);
-        }
-        static calculateHash(prevHash: string, height: number, data: string) {
-            const toHash = `${prevHash}${height}${data}`;
-            return crypto.createHash("sha256").update(toHash).digest("hex");
-        }
+  public hash: string;
+  constructor(
+    public prevHash: string,
+    public height: number,
+    public data: string
+  ) {
+    this.hash = '';
+  }
+  static async calculateHash(prevHash: string, height: number, data: string) {
+    const toHash = `${prevHash}${height}${data}`;
+    const encoder = new TextEncoder();
+    const digest = await window.crypto.subtle.digest(
+      'SHA-256',
+      encoder.encode(toHash)
+    );
+    return Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+  async initialize() {
+    this.hash = await Block.calculateHash(
+      this.prevHash,
+      this.height,
+      this.data
+    );
+  }
 }
 
 class BlockChain {
-    private blocks: Block[];
-    constructor() {
-        this.blocks = [];
-    }
-    private getPrevHash() {
-        if(this.blocks.length === 0) return ""
-        return this.blocks[this.blocks.length - 1].hash;
-    }
-    public addBlock(data: string) {
-        const newBlock = new Block(this.getPrevHash(), this.blocks.length + 1, data)
-        this.blocks.push(newBlock);
-    }
-    public getBlocks() {
-        return [...this.blocks];
-    }
+  private blocks: Block[];
+  constructor() {
+    this.blocks = [];
+  }
+  private getPrevHash() {
+    if (this.blocks.length === 0) return '';
+    return this.blocks[this.blocks.length - 1].hash;
+  }
+  public async addBlock(data: string) {
+    const newBlock = new Block(
+      this.getPrevHash(),
+      this.blocks.length + 1,
+      data
+    );
+    newBlock.hash = await Block.calculateHash(
+      newBlock.prevHash,
+      newBlock.height,
+      newBlock.data
+    );
+    this.blocks.push(newBlock);
+  }
+  public getBlocks() {
+    return [...this.blocks];
+  }
 }
 
 const blockchain = new BlockChain();
 
-blockchain.addBlock("First one");
-blockchain.addBlock("Second one");
-blockchain.addBlock("Third one");
-blockchain.addBlock("Fourth one");
+async function addBlockAndDisplay(data: string) {
+  await blockchain.addBlock(data);
+  const blocks = blockchain.getBlocks();
+  const lastBlock = blocks[blocks.length - 1];
+  const hashValueElement = document.getElementById('hashValue');
+  if (hashValueElement) {
+    hashValueElement.innerText = lastBlock.hash;
+  } else {
+    console.error('hashValue element not found');
+  }
+}
 
-console.log(blockchain.getBlocks());
+window.addBlockAndDisplay = addBlockAndDisplay;

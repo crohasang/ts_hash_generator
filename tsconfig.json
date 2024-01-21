@@ -1,11 +1,12 @@
 {
-  "include" : ["src"],
+  "include": ["src"],
   "compilerOptions": {
     "outDir": "build",
-    "target" : "ES6",
-    "lib": ["ES6"],
-    "strict" : true,
+    "target": "ES6",
+    "lib": ["ES6", "DOM"],
+    "strict": true,
     "esModuleInterop": true,
-    "module": "CommonJS",
+    "module": "ESNext",
+    "moduleResolution": "node"
   }
 }
